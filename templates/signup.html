@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <h2>----REGISTER----</h2>
+    <form method="POST" action="{{ url_for('signup') }}" onsubmit="return validatePasswords()">
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" required>
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" required>
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+        <div class="password-hint">Password must contain:</div>
+        <ul class="password-hint">
+            <li id="uppercase" class="requirement">At least one uppercase letter</li>
+            <li id="lowercase" class="requirement">At least one lowercase letter</li>
+            <li id="digit" class="requirement">At least one digit</li>
+            <li id="special" class="requirement">At least one special character</li>
+            <li id="length" class="requirement">Minimum length of 8 characters</li>
+        </ul>
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" name="confirm_password" id="confirm_password" required>
+        <div id="password-error" class="error"></div>
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+<script>
+function validatePasswords() {
+    var password = document.getElementById("password").value;
+    var confirm_password = document.getElementById("confirm_password").value;
+    var error = document.getElementById("password-error");
+
+    if (password !== confirm_password) {
+        error.textContent = "Passwords do not match.";
+        return false;
+    }
+
+    var passwordCriteria = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    if (!password.match(passwordCriteria)) {
+        error.textContent = "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character.";
+        return false;
+    }
+
+    error.textContent = "";
+    return true;
+}
+
+document.getElementById("password").addEventListener("input", function() {
+    var password = this.value;
+
+    var uppercase = /[A-Z]/.test(password);
+    var lowercase = /[a-z]/.test(password);
+    var digit = /\d/.test(password);
+    var special = /[\W_]/.test(password);
+    var length = password.length >= 8;
+
+    document.getElementById("uppercase").classList.toggle("valid", uppercase);
+    document.getElementById("uppercase").classList.toggle("invalid", !uppercase);
+
+    document.getElementById("lowercase").classList.toggle("valid", lowercase);
+    document.getElementById("lowercase").classList.toggle("invalid", !lowercase);
+
+    document.getElementById("digit").classList.toggle("valid", digit);
+    document.getElementById("digit").classList.toggle("invalid", !digit);
+
+    document.getElementById("special").classList.toggle("valid", special);
+    document.getElementById("special").classList.toggle("invalid", !special);
+
+    document.getElementById("length").classList.toggle("valid", length);
+    document.getElementById("length").classList.toggle("invalid", !length);
+});
+</script>
+</body>
+</html>
